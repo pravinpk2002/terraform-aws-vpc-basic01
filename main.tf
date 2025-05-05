@@ -4,11 +4,21 @@ terraform {
       source  = "hashicorp/aws"
       version = "5.95.0"
     }
+
+    random = {
+      source = "hashicorp/random"
+      version = "3.7.2"
+    }
   }
 }
 
 provider "aws" {
   region = var.region
+}
+
+resource "random_id" "r-id" {
+  byte_length = 8
+  
 }
 
 resource "aws_vpc" "my_vpc" {
@@ -71,4 +81,11 @@ resource "aws_instance" "my_server" {
   tags = {
     Name = var.ec2_name
   }
+}
+
+
+
+resource "aws_s3_bucket" "my-bucket" {
+  bucket = "tf-bucket-${random_id.r-id.hex}"
+  
 }
